@@ -40,6 +40,20 @@ function App() {
     })
     .catch(err =>console.log(err.message))
   }
+
+
+  const handleBlur = (e) =>{
+    console.log(e.target.name, e.target.value);
+    if(e.target.name === "email"){
+      const isEmailValid = /\S+@\S+\.\S+/.test(e.target.value)
+      console.log(isEmailValid);
+    }
+    if(e.target.name === "password"){
+      const isPasswordValid = e.target.value.length>6
+      const isPasswordHasNumber = /\d{1}/.test(e.target.value);
+      console.log(isPasswordValid && isPasswordHasNumber);
+    }
+  }
   return (
     <div className="App">
       {
@@ -54,6 +68,18 @@ function App() {
           <img src={user.photo} alt=""/>
         </div>
       }
+
+      <form action="">
+        <input type="text" onBlur={handleBlur} name="email" id="" required/>
+        <br/>
+        <input type="password" onBlur={handleBlur} name="password" id="" required/>
+        <br/>
+        <button type="submit">submit</button>
+      </form>
+
+
+
+
     </div>
   );
 }
