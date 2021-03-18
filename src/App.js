@@ -15,8 +15,8 @@ function App() {
   const handleSignIn = () => {
     firebase.auth()
       .signInWithPopup(provider)
-      .then(res =>{
-        const {displayName,photoURL,email} = res.user;
+      .then(res => {
+        const { displayName, photoURL, email } = res.user;
         const signedInUser = {
           isSignedIn: true,
           name: displayName,
@@ -30,50 +30,57 @@ function App() {
 
   const handleSignOut = () => {
     firebase.auth().signOut()
-    .then(res => {
-      const signedOutUser = {
-        isSignedIn: false,
-        name: '',
-        email: ''
-      }
-      setUser(signedOutUser);
-    })
-    .catch(err =>console.log(err.message))
+      .then(res => {
+        const signedOutUser = {
+          isSignedIn: false,
+          name: '',
+          email: ''
+        }
+        setUser(signedOutUser);
+      })
+      .catch(err => console.log(err.message))
   }
 
 
-  const handleBlur = (e) =>{
-    console.log(e.target.name, e.target.value);
-    if(e.target.name === "email"){
-      const isEmailValid = /\S+@\S+\.\S+/.test(e.target.value)
-      console.log(isEmailValid);
+  const handleBlur = (e) => {
+    let isFormValid = true;
+    if (e.target.name === "email") {
+      isFormValid = /\S+@\S+\.\S+/.test(e.target.value);
     }
-    if(e.target.name === "password"){
-      const isPasswordValid = e.target.value.length>6
+    if (e.target.name === "password") {
+      const isPasswordValid = e.target.value.length > 6
       const isPasswordHasNumber = /\d{1}/.test(e.target.value);
-      console.log(isPasswordValid && isPasswordHasNumber);
+      isFormValid = isPasswordValid && isPasswordHasNumber;
+    }
+    if (isFormValid) {
+      const newUserInfo = { ...user };
+      newUserInfo[e.target.name] = e.target.value;
+      setUser(newUserInfo);
     }
   }
   return (
     <div className="App">
       {
         user.isSignedIn ? <button onClick={handleSignOut}>Sign out</button> :
-        <button onClick={handleSignIn}>Sign in</button>
+          <button onClick={handleSignIn}>Sign in</button>
       }
       {
-        user.isSignedIn && 
+        user.isSignedIn &&
         <div>
           <p>Welcome, {user.name}</p>
           <p>Your Email: {user.email}</p>
-          <img src={user.photo} alt=""/>
+          <img src={user.photo} alt="" />
         </div>
       }
-
+      <h4>Email:{user.email}</h4>
+      <h4>Name: {user.name}</h4>
+      <h4>Email:{user.password}</h4>
       <form action="">
-        <input type="text" onBlur={handleBlur} name="email" id="" required/>
-        <br/>
-        <input type="password" onBlur={handleBlur} name="password" id="" required/>
-        <br/>
+        <input type="text" name="name" onBlur={handleBlur} id=""/>
+        <input type="text" onBlur={handleBlur} name="email" id="" required />
+        <br />
+        <input type="password" onBlur={handleBlur} name="password" id="" required />
+        <br />
         <button type="submit">submit</button>
       </form>
 
